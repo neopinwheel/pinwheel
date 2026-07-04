@@ -7,6 +7,10 @@
   --foreground: #0f0f14;
   --surface: #ffffff;
   --surface-border: rgba(15, 15, 20, 0.08);
+  --chart-primary: #059669;
+  --chart-secondary: #6366f1;
+  --chart-grid: rgba(15, 15, 20, 0.08);
+  --chart-axis: rgba(15, 15, 20, 0.35);
 }
 
 .dark {
@@ -14,6 +18,10 @@
   --foreground: #f4f4f6;
   --surface: #101014;
   --surface-border: rgba(255, 255, 255, 0.08);
+  --chart-primary: #34d399;
+  --chart-secondary: #818cf8;
+  --chart-grid: rgba(255, 255, 255, 0.08);
+  --chart-axis: rgba(255, 255, 255, 0.35);
 }
 
 @theme inline {

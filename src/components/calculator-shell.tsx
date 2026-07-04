@@ -80,12 +80,14 @@ export function CalculatorShell({
   inputs,
   results,
   shareParams,
+  extra,
 }: {
   domain: DomainMeta;
   calculator: CalculatorMeta;
   inputs: React.ReactNode;
   results: React.ReactNode;
   shareParams?: Record<string, string>;
+  extra?: React.ReactNode;
 }) {
   const { entries, remove, clear } = useCalculatorHistory(
     `${domain.slug}/${calculator.slug}`,
@@ -113,6 +115,8 @@ export function CalculatorShell({
           </div>
         </div>
       </div>
+
+      {extra}
 
       <ExplainerCard text={calculator.explainer} />
     </CalculatorPageFrame>
