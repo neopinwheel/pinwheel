@@ -5,6 +5,7 @@ import { ChevronRight } from "lucide-react";
 import type { DomainMeta, CalculatorMeta } from "@/lib/calculators";
 import { ShareButton } from "@/components/ui/share-button";
 import { HistoryStrip } from "@/components/ui/history-strip";
+import { ExplainerCard } from "@/components/ui/explainer-card";
 import { useCalculatorHistory } from "@/hooks/use-calculator-history";
 
 export function CalculatorHeader({
@@ -112,6 +113,8 @@ export function CalculatorShell({
           </div>
         </div>
       </div>
+
+      <ExplainerCard text={calculator.explainer} />
     </CalculatorPageFrame>
   );
 }

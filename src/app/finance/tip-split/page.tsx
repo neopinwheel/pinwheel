@@ -1,9 +1,14 @@
-import type { Metadata } from "next";
 import { TipSplitCalculator } from "@/components/calculators/tip-split-calculator";
+import { getCalculator } from "@/lib/calculators";
+import { buildMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Tip & Bill Split Calculator — Pinwheel",
-};
+const { domain, calculator } = getCalculator("finance", "tip-split")!;
+
+export const metadata = buildMetadata({
+  title: calculator.name,
+  description: calculator.description,
+  path: `/${domain.slug}/${calculator.slug}`,
+});
 
 export default function Page() {
   return <TipSplitCalculator />;

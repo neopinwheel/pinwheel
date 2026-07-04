@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import { getDomain } from "@/lib/calculators";
 import { CalculatorPageFrame, CalculatorHeader } from "@/components/calculator-shell";
 import { Segmented } from "@/components/ui/field";
+import { ExplainerCard } from "@/components/ui/explainer-card";
 
 const domain = getDomain("math")!;
 const calculator = domain.calculators.find((c) => c.slug === "scientific")!;
@@ -252,6 +253,8 @@ export function ScientificCalculator() {
           </button>
         </div>
       </div>
+
+      <ExplainerCard text={calculator.explainer} />
     </CalculatorPageFrame>
   );
 }

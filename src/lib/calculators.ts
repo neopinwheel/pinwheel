@@ -35,6 +35,7 @@ export type CalculatorMeta = {
   short: string;
   description: string;
   icon: LucideIcon;
+  explainer: string;
 };
 
 export type DomainMeta = {
@@ -72,6 +73,8 @@ export const domains: DomainMeta[] = [
         short: "Loan / Mortgage",
         description: "Monthly payments, total interest, and full amortization insight.",
         icon: HomeIcon,
+        explainer:
+          "Monthly payment uses the standard amortization formula: M = P × r × (1+r)ⁿ ÷ ((1+r)ⁿ − 1), where P is the principal, r is the monthly interest rate, and n is the number of payments. Interest is recalculated on the remaining balance each month, so more of each payment goes toward principal over time.",
       },
       {
         slug: "compound-interest",
@@ -79,6 +82,8 @@ export const domains: DomainMeta[] = [
         short: "Compound Interest",
         description: "Watch contributions and compounding turn into long-term growth.",
         icon: TrendingUp,
+        explainer:
+          "Each month, the balance earns interest at the monthly-equivalent rate for your chosen compounding frequency, then your contribution is added: balance = balance × (1 + r) + contribution. Small differences in compounding frequency add up meaningfully over long time horizons.",
       },
       {
         slug: "tip-split",
@@ -86,6 +91,8 @@ export const domains: DomainMeta[] = [
         short: "Tip / Split",
         description: "Tip fast and split any bill evenly across a group.",
         icon: Receipt,
+        explainer:
+          "Tip = bill × tip%. The total (bill + tip) is then divided evenly by the number of people, so everyone pays the same share regardless of what they individually ordered.",
       },
     ],
   },
@@ -113,6 +120,8 @@ export const domains: DomainMeta[] = [
         short: "BMI",
         description: "Body mass index with metric or imperial units, at a glance.",
         icon: Activity,
+        explainer:
+          "BMI = weight (kg) ÷ height (m)². It's a simple ratio, not a body composition measurement — the same BMI can reflect very different amounts of muscle versus fat, which is why it's shown alongside a healthy-range band rather than a single target number.",
       },
       {
         slug: "calories",
@@ -120,6 +129,8 @@ export const domains: DomainMeta[] = [
         short: "Calories / BMR",
         description: "Daily energy needs from BMR and activity level, Mifflin-St Jeor based.",
         icon: Flame,
+        explainer:
+          "BMR uses the Mifflin-St Jeor equation: 10 × weight(kg) + 6.25 × height(cm) − 5 × age, +5 for men or −161 for women. Multiplying by an activity factor (1.2–1.9) estimates total daily calories burned (TDEE).",
       },
       {
         slug: "body-fat",
@@ -127,6 +138,8 @@ export const domains: DomainMeta[] = [
         short: "Body Fat",
         description: "US Navy tape-measure method for estimated body fat percentage.",
         icon: PersonStanding,
+        explainer:
+          "Estimated with the U.S. Navy tape-measure method, which relates body fat to the logarithm of waist, neck (and hip, for women) measurements relative to height. It's a field estimate, not a lab measurement like DEXA.",
       },
     ],
   },
@@ -154,6 +167,8 @@ export const domains: DomainMeta[] = [
         short: "Scientific",
         description: "A full-featured calculator with trig, logs, powers, and memory.",
         icon: CalculatorIcon,
+        explainer:
+          "Trig functions (sin, cos, tan) use whichever angle mode — DEG or RAD — is selected above the display. Results are rounded to 12 significant digits to avoid floating-point artifacts like 0.1 + 0.2 showing extra trailing digits.",
       },
       {
         slug: "percentage",
@@ -161,6 +176,8 @@ export const domains: DomainMeta[] = [
         short: "Percentage",
         description: "Percent of a number, percent change, and reverse percentages.",
         icon: Percent,
+        explainer:
+          "Three common percentage questions in one place: X% of Y is X ÷ 100 × Y; percentage change from one value to another is (new − old) ÷ |old| × 100; and what percent a part is of a whole is part ÷ whole × 100.",
       },
       {
         slug: "unit-converter",
@@ -168,6 +185,8 @@ export const domains: DomainMeta[] = [
         short: "Unit Converter",
         description: "Length, weight, and temperature conversions in one place.",
         icon: Ruler,
+        explainer:
+          "Length and weight conversions go through a common base unit (meters or kilograms), so any two units convert via one multiplication. Temperature isn't linear the same way, so it converts through Celsius using each scale's own formula.",
       },
     ],
   },
@@ -195,6 +214,8 @@ export const domains: DomainMeta[] = [
         short: "Age",
         description: "Exact age in years, months, days — and days until your next birthday.",
         icon: Cake,
+        explainer:
+          "Age is calculated as a true calendar difference — years, months, and days between your birth date and the reference date — not just total days divided by 365, so it stays accurate across leap years and varying month lengths.",
       },
       {
         slug: "date-diff",
@@ -202,6 +223,8 @@ export const domains: DomainMeta[] = [
         short: "Date Difference",
         description: "Precise duration between any two dates, in every useful unit.",
         icon: CalendarRange,
+        explainer:
+          "Calculates the exact calendar span between two dates in years, months, and days — the same calendar-aware method as the Age calculator — plus total days and weeks for quick reference.",
       },
       {
         slug: "discount",
@@ -209,6 +232,8 @@ export const domains: DomainMeta[] = [
         short: "Discount",
         description: "Final price, amount saved, and stacked discounts made simple.",
         icon: Tag,
+        explainer:
+          "Each discount applies to the price after the previous one, not the original price — so two 20% discounts stacked together save 36% overall, not 40%.",
       },
     ],
   },

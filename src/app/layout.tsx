@@ -17,14 +17,31 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const description =
+  "A beautifully simple hub of calculators across finance, health, math & science, and everyday life.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL("https://pinwheel-kappa.vercel.app"),
   title: "Pinwheel — Calculators for everything",
-  description:
-    "A beautifully simple hub of calculators across finance, health, math & science, and everyday life.",
+  description,
   manifest: "/manifest.json",
   icons: {
     icon: [{ url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" }],
     apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+  openGraph: {
+    title: "Pinwheel — Calculators for everything",
+    description,
+    url: "/",
+    siteName: "Pinwheel",
+    type: "website",
+    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Pinwheel — Calculators for everything",
+    description,
+    images: ["/og-image.png"],
   },
 };
 

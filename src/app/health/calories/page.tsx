@@ -1,9 +1,14 @@
-import type { Metadata } from "next";
 import { CalorieCalculator } from "@/components/calculators/calorie-calculator";
+import { getCalculator } from "@/lib/calculators";
+import { buildMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "Calorie & BMR Calculator — Pinwheel",
-};
+const { domain, calculator } = getCalculator("health", "calories")!;
+
+export const metadata = buildMetadata({
+  title: calculator.name,
+  description: calculator.description,
+  path: `/${domain.slug}/${calculator.slug}`,
+});
 
 export default function Page() {
   return <CalorieCalculator />;

@@ -7,6 +7,7 @@ import { Field } from "@/components/ui/field";
 import { ResultHero } from "@/components/ui/result-stat";
 import { ShareButton } from "@/components/ui/share-button";
 import { HistoryStrip } from "@/components/ui/history-strip";
+import { ExplainerCard } from "@/components/ui/explainer-card";
 import { formatNumber, toNumber } from "@/lib/format";
 import { useShareableState } from "@/hooks/use-shareable-state";
 import { useCalculatorHistory } from "@/hooks/use-calculator-history";
@@ -160,6 +161,8 @@ export function PercentageCalculator() {
           </div>
         </div>
       </div>
+
+      <ExplainerCard text={calculator.explainer} />
     </CalculatorPageFrame>
   );
 }
