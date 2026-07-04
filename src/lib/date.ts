@@ -59,6 +59,12 @@ function stripTime(d: Date) {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
 
+export function addDays(date: Date, days: number): Date {
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return d;
+}
+
 export function formatDateLong(d: Date) {
   return d.toLocaleDateString("en-US", {
     weekday: "long",

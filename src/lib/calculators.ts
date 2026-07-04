@@ -15,6 +15,14 @@ import {
   Cake,
   CalendarRange,
   Tag,
+  PiggyBank,
+  Coins,
+  Baby,
+  Gauge,
+  GraduationCap,
+  BarChart3,
+  Fuel,
+  Globe,
   type LucideIcon,
 } from "lucide-react";
 
@@ -94,6 +102,24 @@ export const domains: DomainMeta[] = [
         explainer:
           "Tip = bill × tip%. The total (bill + tip) is then divided evenly by the number of people, so everyone pays the same share regardless of what they individually ordered.",
       },
+      {
+        slug: "retirement",
+        name: "Retirement Savings",
+        short: "Retirement",
+        description: "Project your nest egg at retirement and a sustainable withdrawal rate.",
+        icon: PiggyBank,
+        explainer:
+          "Projects your balance to retirement using the same monthly-compounding growth as the Compound Interest calculator, then estimates a sustainable monthly income using the 4% rule — withdrawing 4% of the balance annually is a common rule of thumb for a portfolio that lasts 30+ years.",
+      },
+      {
+        slug: "currency",
+        name: "Currency Converter",
+        short: "Currency",
+        description: "Convert between currencies using live daily exchange rates.",
+        icon: Coins,
+        explainer:
+          "Rates are fetched live from the Frankfurter API, which publishes the European Central Bank's daily reference rates. Rates update once per business day, so intraday market movements aren't reflected.",
+      },
     ],
   },
   {
@@ -140,6 +166,24 @@ export const domains: DomainMeta[] = [
         icon: PersonStanding,
         explainer:
           "Estimated with the U.S. Navy tape-measure method, which relates body fat to the logarithm of waist, neck (and hip, for women) measurements relative to height. It's a field estimate, not a lab measurement like DEXA.",
+      },
+      {
+        slug: "due-date",
+        name: "Pregnancy Due Date",
+        short: "Due Date",
+        description: "Estimated due date and current gestational age from your last period.",
+        icon: Baby,
+        explainer:
+          "Uses Naegele's rule: due date = first day of last period + 280 days, adjusted for a cycle length other than 28 days. If you enter a conception date instead, it adds 266 days. Either way, it's an estimate — only about 5% of babies arrive on their exact due date.",
+      },
+      {
+        slug: "heart-rate-zones",
+        name: "Heart Rate Zones",
+        short: "HR Zones",
+        description: "Training zones for warm-up, fat burn, aerobic, and max effort.",
+        icon: Gauge,
+        explainer:
+          "Estimated max heart rate = 220 − age. Each training zone is a percentage band of that max: 50–60% warm-up, 60–70% fat burn, 70–80% aerobic, 80–90% anaerobic, and 90–100% maximum effort.",
       },
     ],
   },
@@ -188,6 +232,24 @@ export const domains: DomainMeta[] = [
         explainer:
           "Length and weight conversions go through a common base unit (meters or kilograms), so any two units convert via one multiplication. Temperature isn't linear the same way, so it converts through Celsius using each scale's own formula.",
       },
+      {
+        slug: "gpa",
+        name: "GPA Calculator",
+        short: "GPA",
+        description: "Weighted grade point average from your course grades and credits.",
+        icon: GraduationCap,
+        explainer:
+          "Each letter grade maps to a grade point (A = 4.0 down to F = 0.0). GPA is the credit-weighted average: sum(credits × grade points) ÷ sum(credits), so a 4-credit course affects your GPA twice as much as a 2-credit course.",
+      },
+      {
+        slug: "statistics",
+        name: "Statistics Calculator",
+        short: "Statistics",
+        description: "Mean, median, mode, and standard deviation from a list of numbers.",
+        icon: BarChart3,
+        explainer:
+          "Mean is the sum divided by count. Median is the middle value once sorted (or the average of the two middle values). Standard deviation shown here is the sample standard deviation — it divides by (n − 1), the standard choice when your numbers are a sample rather than a full population.",
+      },
     ],
   },
   {
@@ -234,6 +296,24 @@ export const domains: DomainMeta[] = [
         icon: Tag,
         explainer:
           "Each discount applies to the price after the previous one, not the original price — so two 20% discounts stacked together save 36% overall, not 40%.",
+      },
+      {
+        slug: "fuel-cost",
+        name: "Fuel Cost",
+        short: "Fuel Cost",
+        description: "Estimate the fuel cost of a trip from distance and efficiency.",
+        icon: Fuel,
+        explainer:
+          "Fuel needed = distance ÷ fuel efficiency (miles per gallon or liters per 100 km, depending on units). Total cost is that amount multiplied by the price per gallon or liter.",
+      },
+      {
+        slug: "timezone",
+        name: "Time Zone Converter",
+        short: "Time Zone",
+        description: "Convert a date and time between any two time zones.",
+        icon: Globe,
+        explainer:
+          "The entered date and time is treated as wall-clock time in the \"from\" zone, converted to a precise instant, then reformatted for the \"to\" zone using each zone's actual UTC offset — including daylight saving — on that date.",
       },
     ],
   },
