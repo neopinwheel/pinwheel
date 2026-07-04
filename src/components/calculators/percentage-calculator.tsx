@@ -6,8 +6,10 @@ import { CalculatorPageFrame, CalculatorHeader } from "@/components/calculator-s
 import { Field } from "@/components/ui/field";
 import { ResultHero } from "@/components/ui/result-stat";
 import { ShareButton } from "@/components/ui/share-button";
+import { HistoryStrip } from "@/components/ui/history-strip";
 import { formatNumber, toNumber } from "@/lib/format";
 import { useShareableState } from "@/hooks/use-shareable-state";
+import { useCalculatorHistory } from "@/hooks/use-calculator-history";
 
 const domain = getDomain("math")!;
 const calculator = domain.calculators.find((c) => c.slug === "percentage")!;
@@ -46,9 +48,16 @@ export function PercentageCalculator() {
     [percentA, ofB, fromX, toY, partP, wholeW]
   );
 
+  const { entries, remove, clear } = useCalculatorHistory(
+    `${domain.slug}/${calculator.slug}`,
+    shareParams
+  );
+
   return (
     <CalculatorPageFrame domain={domain} maxWidth="max-w-3xl">
       <CalculatorHeader domain={domain} calculator={calculator} />
+
+      <HistoryStrip entries={entries} onRemove={remove} onClear={clear} />
 
       <div className="mb-5 flex justify-end">
         <ShareButton params={shareParams} theme={domain.theme} />

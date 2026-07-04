@@ -1,6 +1,7 @@
 import { Sparkle } from "lucide-react";
 import { domains, totalCalculatorCount } from "@/lib/calculators";
 import { DomainCard } from "@/components/domain-card";
+import { FavoritesSection } from "@/components/favorites-section";
 
 export default function Home() {
   return (
@@ -25,6 +26,8 @@ export default function Home() {
           browser.
         </p>
       </section>
+
+      <FavoritesSection />
 
       <section className="relative mx-auto max-w-5xl px-6 pb-28">
         <div className="grid gap-5 sm:grid-cols-2">

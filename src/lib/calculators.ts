@@ -224,6 +224,11 @@ export function getCalculator(domainSlug: string, calcSlug: string) {
   return domain && calculator ? { domain, calculator } : undefined;
 }
 
+export function getCalculatorByHref(href: string) {
+  const [, domainSlug, calcSlug] = href.split("/");
+  return getCalculator(domainSlug, calcSlug);
+}
+
 export const totalCalculatorCount = domains.reduce(
   (sum, d) => sum + d.calculators.length,
   0

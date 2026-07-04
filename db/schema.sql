@@ -44,3 +44,30 @@ CREATE TABLE IF NOT EXISTS roadmap_subtasks (
 CREATE INDEX IF NOT EXISTS idx_roadmap_phases_version ON roadmap_phases(version_id);
 CREATE INDEX IF NOT EXISTS idx_roadmap_tasks_phase ON roadmap_tasks(phase_id);
 CREATE INDEX IF NOT EXISTS idx_roadmap_subtasks_task ON roadmap_subtasks(task_id);
+
+-- Opt-in cross-device sync. No accounts — a device generates (or adopts) an
+-- anonymous UUID "sync code" that any other device can enter to converge.
+
+CREATE TABLE IF NOT EXISTS sync_devices (
+  id UUID PRIMARY KEY,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  last_seen_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS sync_favorites (
+  device_id UUID NOT NULL REFERENCES sync_devices(id) ON DELETE CASCADE,
+  href TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  PRIMARY KEY (device_id, href)
+);
+
+CREATE TABLE IF NOT EXISTS sync_history (
+  id SERIAL PRIMARY KEY,
+  device_id UUID NOT NULL REFERENCES sync_devices(id) ON DELETE CASCADE,
+  calculator_key TEXT NOT NULL,
+  params JSONB NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_sync_favorites_device ON sync_favorites(device_id);
+CREATE INDEX IF NOT EXISTS idx_sync_history_device ON sync_history(device_id, created_at DESC);

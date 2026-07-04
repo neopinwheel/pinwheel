@@ -1,7 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import type { DomainMeta, CalculatorMeta } from "@/lib/calculators";
 import { ShareButton } from "@/components/ui/share-button";
+import { HistoryStrip } from "@/components/ui/history-strip";
+import { useCalculatorHistory } from "@/hooks/use-calculator-history";
 
 export function CalculatorHeader({
   domain,
@@ -82,9 +86,16 @@ export function CalculatorShell({
   results: React.ReactNode;
   shareParams?: Record<string, string>;
 }) {
+  const { entries, remove, clear } = useCalculatorHistory(
+    `${domain.slug}/${calculator.slug}`,
+    shareParams
+  );
+
   return (
     <CalculatorPageFrame domain={domain}>
       <CalculatorHeader domain={domain} calculator={calculator} />
+
+      <HistoryStrip entries={entries} onRemove={remove} onClear={clear} />
 
       <div className="grid gap-5 lg:grid-cols-5">
         <div className="card-surface rounded-3xl p-6 shadow-sm lg:col-span-3">

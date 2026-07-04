@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SearchTriggerButton } from "@/components/search-trigger-button";
+import { SyncButton } from "@/components/sync-button";
 
 export function SiteHeader() {
   return (
@@ -16,6 +17,7 @@ export function SiteHeader() {
         </Link>
         <nav className="flex items-center gap-2.5">
           <SearchTriggerButton />
+          <SyncButton />
           <ThemeToggle />
         </nav>
       </div>

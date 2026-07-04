@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { DomainMeta, CalculatorMeta } from "@/lib/calculators";
+import { FavoriteToggleButton } from "@/components/ui/favorite-toggle-button";
 
 export function CalculatorCard({
   domain,
@@ -10,24 +11,24 @@ export function CalculatorCard({
   calculator: CalculatorMeta;
 }) {
   const Icon = calculator.icon;
+  const href = `/${domain.slug}/${calculator.slug}`;
 
   return (
-    <Link
-      href={`/${domain.slug}/${calculator.slug}`}
-      className="group flex items-start gap-4 rounded-2xl border border-surface-border bg-surface p-5 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/5"
-    >
+    <div className="group relative flex items-start gap-4 rounded-2xl border border-surface-border bg-surface p-5 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/5">
+      <Link href={href} className="absolute inset-0 z-0" aria-label={calculator.name} />
       <div
-        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${domain.theme.gradient} shadow-md`}
+        className={`pointer-events-none relative z-0 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${domain.theme.gradient} shadow-md`}
       >
         <Icon className="h-5 w-5 text-white" strokeWidth={2} />
       </div>
-      <div className="min-w-0 flex-1">
+      <div className="pointer-events-none relative z-0 min-w-0 flex-1">
         <h3 className="font-semibold tracking-tight">{calculator.name}</h3>
         <p className="mt-0.5 text-sm text-foreground/55">
           {calculator.description}
         </p>
       </div>
-      <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-foreground/30 transition-all group-hover:translate-x-0.5 group-hover:text-foreground/60" />
-    </Link>
+      <FavoriteToggleButton href={href} />
+      <ArrowRight className="pointer-events-none relative z-0 mt-1 h-4 w-4 shrink-0 text-foreground/30 transition-all group-hover:translate-x-0.5 group-hover:text-foreground/60" />
+    </div>
   );
 }
