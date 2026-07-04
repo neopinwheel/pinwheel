@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { SearchTriggerButton } from "@/components/search-trigger-button";
 
 export function SiteHeader() {
   return (
@@ -13,7 +14,8 @@ export function SiteHeader() {
             Pinwheel
           </span>
         </Link>
-        <nav className="flex items-center gap-1">
+        <nav className="flex items-center gap-2.5">
+          <SearchTriggerButton />
           <ThemeToggle />
         </nav>
       </div>

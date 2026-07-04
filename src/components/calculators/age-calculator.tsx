@@ -7,17 +7,20 @@ import { Field } from "@/components/ui/field";
 import { ResultHero, StatRow } from "@/components/ui/result-stat";
 import { formatNumber } from "@/lib/format";
 import { diffYMD, nextAnniversary, parseDateInput, todayInputValue } from "@/lib/date";
+import { useShareableState } from "@/hooks/use-shareable-state";
 
 const domain = getDomain("everyday")!;
 const calculator = domain.calculators.find((c) => c.slug === "age")!;
 
 export function AgeCalculator() {
-  const [birthDate, setBirthDate] = useState("1998-06-15");
+  const [birthDate, setBirthDate] = useShareableState("dob", "1998-06-15");
   const [asOfDate, setAsOfDate] = useState("");
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- today's date is client-only to avoid SSR/build-time date mismatch
-    setAsOfDate(todayInputValue());
+    const params = new URLSearchParams(window.location.search);
+    const fromUrl = params.get("asof");
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- today's date (or a shared "asof" param) is client-only to avoid SSR/build-time date mismatch
+    setAsOfDate(fromUrl || todayInputValue());
   }, []);
 
   const result = useMemo(() => {
@@ -33,10 +36,16 @@ export function AgeCalculator() {
     return { years, months, days, totalDays, totalWeeks, totalMonths, daysUntil };
   }, [birthDate, asOfDate]);
 
+  const shareParams = useMemo(
+    () => ({ dob: birthDate, asof: asOfDate }),
+    [birthDate, asOfDate]
+  );
+
   return (
     <CalculatorShell
       domain={domain}
       calculator={calculator}
+      shareParams={shareParams}
       inputs={
         <div className="space-y-5">
           <Field

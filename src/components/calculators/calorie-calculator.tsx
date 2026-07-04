@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { getDomain } from "@/lib/calculators";
 import { CalculatorShell } from "@/components/calculator-shell";
 import { Field, Segmented, Select } from "@/components/ui/field";
 import { ResultHero, StatRow } from "@/components/ui/result-stat";
 import { formatNumber, toNumber } from "@/lib/format";
+import { useShareableState } from "@/hooks/use-shareable-state";
 
 const domain = getDomain("health")!;
 const calculator = domain.calculators.find((c) => c.slug === "calories")!;
@@ -22,15 +23,15 @@ const ACTIVITY_LEVELS = [
 ];
 
 export function CalorieCalculator() {
-  const [sex, setSex] = useState<Sex>("male");
-  const [units, setUnits] = useState<Units>("metric");
-  const [age, setAge] = useState("30");
-  const [heightCm, setHeightCm] = useState("178");
-  const [weightKg, setWeightKg] = useState("78");
-  const [heightFt, setHeightFt] = useState("5");
-  const [heightIn, setHeightIn] = useState("10");
-  const [weightLb, setWeightLb] = useState("172");
-  const [activity, setActivity] = useState("1.55");
+  const [sex, setSex] = useShareableState<Sex>("sex", "male");
+  const [units, setUnits] = useShareableState<Units>("units", "metric");
+  const [age, setAge] = useShareableState("age", "30");
+  const [heightCm, setHeightCm] = useShareableState("hcm", "178");
+  const [weightKg, setWeightKg] = useShareableState("wkg", "78");
+  const [heightFt, setHeightFt] = useShareableState("hft", "5");
+  const [heightIn, setHeightIn] = useShareableState("hin", "10");
+  const [weightLb, setWeightLb] = useShareableState("wlb", "172");
+  const [activity, setActivity] = useShareableState("activity", "1.55");
 
   const result = useMemo(() => {
     let hCm: number;
@@ -52,10 +53,26 @@ export function CalorieCalculator() {
     return { bmr: Math.max(0, bmr), tdee: Math.max(0, tdee) };
   }, [sex, units, age, heightCm, weightKg, heightFt, heightIn, weightLb, activity]);
 
+  const shareParams = useMemo(
+    () => ({
+      sex,
+      units,
+      age,
+      hcm: heightCm,
+      wkg: weightKg,
+      hft: heightFt,
+      hin: heightIn,
+      wlb: weightLb,
+      activity,
+    }),
+    [sex, units, age, heightCm, weightKg, heightFt, heightIn, weightLb, activity]
+  );
+
   return (
     <CalculatorShell
       domain={domain}
       calculator={calculator}
+      shareParams={shareParams}
       inputs={
         <div className="space-y-5">
           <div className="grid grid-cols-2 gap-4">

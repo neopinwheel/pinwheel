@@ -1,20 +1,21 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { getDomain } from "@/lib/calculators";
 import { CalculatorShell } from "@/components/calculator-shell";
 import { Field, Segmented } from "@/components/ui/field";
 import { ResultHero, StatRow } from "@/components/ui/result-stat";
 import { formatCurrency, toNumber } from "@/lib/format";
+import { useShareableState } from "@/hooks/use-shareable-state";
 
 const domain = getDomain("finance")!;
 const calculator = domain.calculators.find((c) => c.slug === "loan")!;
 
 export function LoanCalculator() {
-  const [amount, setAmount] = useState("350000");
-  const [rate, setRate] = useState("6.5");
-  const [term, setTerm] = useState("30");
-  const [termUnit, setTermUnit] = useState<"years" | "months">("years");
+  const [amount, setAmount] = useShareableState("amount", "350000");
+  const [rate, setRate] = useShareableState("rate", "6.5");
+  const [term, setTerm] = useShareableState("term", "30");
+  const [termUnit, setTermUnit] = useShareableState<"years" | "months">("unit", "years");
 
   const result = useMemo(() => {
     const P = toNumber(amount);
@@ -34,10 +35,16 @@ export function LoanCalculator() {
     return { monthly, totalPaid, totalInterest, principal: P };
   }, [amount, rate, term, termUnit]);
 
+  const shareParams = useMemo(
+    () => ({ amount, rate, term, unit: termUnit }),
+    [amount, rate, term, termUnit]
+  );
+
   return (
     <CalculatorShell
       domain={domain}
       calculator={calculator}
+      shareParams={shareParams}
       inputs={
         <div className="space-y-5">
           <Field

@@ -1,19 +1,20 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { getDomain } from "@/lib/calculators";
 import { CalculatorShell } from "@/components/calculator-shell";
 import { Field } from "@/components/ui/field";
 import { ResultHero, StatRow } from "@/components/ui/result-stat";
 import { formatCurrency, toNumber } from "@/lib/format";
+import { useShareableState } from "@/hooks/use-shareable-state";
 
 const domain = getDomain("everyday")!;
 const calculator = domain.calculators.find((c) => c.slug === "discount")!;
 
 export function DiscountCalculator() {
-  const [price, setPrice] = useState("120");
-  const [discount, setDiscount] = useState("25");
-  const [extraDiscount, setExtraDiscount] = useState("0");
+  const [price, setPrice] = useShareableState("price", "120");
+  const [discount, setDiscount] = useShareableState("discount", "25");
+  const [extraDiscount, setExtraDiscount] = useShareableState("extra", "0");
 
   const result = useMemo(() => {
     const original = Math.max(0, toNumber(price));
@@ -28,10 +29,16 @@ export function DiscountCalculator() {
     return { original, finalPrice, totalSaved, effectiveDiscount };
   }, [price, discount, extraDiscount]);
 
+  const shareParams = useMemo(
+    () => ({ price, discount, extra: extraDiscount }),
+    [price, discount, extraDiscount]
+  );
+
   return (
     <CalculatorShell
       domain={domain}
       calculator={calculator}
+      shareParams={shareParams}
       inputs={
         <div className="space-y-5">
           <Field

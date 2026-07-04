@@ -1,12 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { getDomain } from "@/lib/calculators";
 import { CalculatorShell } from "@/components/calculator-shell";
 import { Field, Segmented } from "@/components/ui/field";
 import { ResultHero } from "@/components/ui/result-stat";
 import { formatNumber, toNumber } from "@/lib/format";
 import { inToCm } from "@/lib/units";
+import { useShareableState } from "@/hooks/use-shareable-state";
 
 const domain = getDomain("health")!;
 const calculator = domain.calculators.find((c) => c.slug === "body-fat")!;
@@ -35,12 +36,12 @@ function categorize(sex: Sex, bf: number) {
 }
 
 export function BodyFatCalculator() {
-  const [sex, setSex] = useState<Sex>("male");
-  const [units, setUnits] = useState<Units>("metric");
-  const [height, setHeight] = useState("175");
-  const [neck, setNeck] = useState("38");
-  const [waist, setWaist] = useState("85");
-  const [hip, setHip] = useState("95");
+  const [sex, setSex] = useShareableState<Sex>("sex", "male");
+  const [units, setUnits] = useShareableState<Units>("units", "metric");
+  const [height, setHeight] = useShareableState("height", "175");
+  const [neck, setNeck] = useShareableState("neck", "38");
+  const [waist, setWaist] = useShareableState("waist", "85");
+  const [hip, setHip] = useShareableState("hip", "95");
 
   const result = useMemo(() => {
     const toCm = (v: string) => (units === "metric" ? toNumber(v) : inToCm(toNumber(v)));
@@ -63,10 +64,16 @@ export function BodyFatCalculator() {
 
   const category = categorize(sex, result.bf);
 
+  const shareParams = useMemo(
+    () => ({ sex, units, height, neck, waist, hip }),
+    [sex, units, height, neck, waist, hip]
+  );
+
   return (
     <CalculatorShell
       domain={domain}
       calculator={calculator}
+      shareParams={shareParams}
       inputs={
         <div className="space-y-5">
           <div className="grid grid-cols-2 gap-4">

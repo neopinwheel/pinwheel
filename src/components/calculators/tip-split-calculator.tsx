@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { getDomain } from "@/lib/calculators";
 import { CalculatorShell } from "@/components/calculator-shell";
 import { Field } from "@/components/ui/field";
 import { ResultHero, StatRow } from "@/components/ui/result-stat";
 import { formatCurrency, toNumber, clamp } from "@/lib/format";
+import { useShareableState, useShareableNumberState } from "@/hooks/use-shareable-state";
 
 const domain = getDomain("finance")!;
 const calculator = domain.calculators.find((c) => c.slug === "tip-split")!;
@@ -13,10 +14,10 @@ const calculator = domain.calculators.find((c) => c.slug === "tip-split")!;
 const PRESETS = [10, 15, 18, 20, 25];
 
 export function TipSplitCalculator() {
-  const [bill, setBill] = useState("86.50");
-  const [tipPercent, setTipPercent] = useState(18);
-  const [customTip, setCustomTip] = useState("18");
-  const [people, setPeople] = useState(2);
+  const [bill, setBill] = useShareableState("bill", "86.50");
+  const [tipPercent, setTipPercent] = useShareableNumberState("tip", 18);
+  const [customTip, setCustomTip] = useShareableState("tip", "18");
+  const [people, setPeople] = useShareableNumberState("people", 2);
 
   const result = useMemo(() => {
     const billAmount = Math.max(0, toNumber(bill));
@@ -34,10 +35,16 @@ export function TipSplitCalculator() {
     };
   }, [bill, tipPercent, people]);
 
+  const shareParams = useMemo(
+    () => ({ bill, tip: String(tipPercent), people: String(people) }),
+    [bill, tipPercent, people]
+  );
+
   return (
     <CalculatorShell
       domain={domain}
       calculator={calculator}
+      shareParams={shareParams}
       inputs={
         <div className="space-y-5">
           <Field

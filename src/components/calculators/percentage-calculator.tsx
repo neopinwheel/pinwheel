@@ -1,24 +1,26 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { getDomain } from "@/lib/calculators";
 import { CalculatorPageFrame, CalculatorHeader } from "@/components/calculator-shell";
 import { Field } from "@/components/ui/field";
 import { ResultHero } from "@/components/ui/result-stat";
+import { ShareButton } from "@/components/ui/share-button";
 import { formatNumber, toNumber } from "@/lib/format";
+import { useShareableState } from "@/hooks/use-shareable-state";
 
 const domain = getDomain("math")!;
 const calculator = domain.calculators.find((c) => c.slug === "percentage")!;
 
 export function PercentageCalculator() {
-  const [percentA, setPercentA] = useState("15");
-  const [ofB, setOfB] = useState("240");
+  const [percentA, setPercentA] = useShareableState("pct", "15");
+  const [ofB, setOfB] = useShareableState("of", "240");
 
-  const [fromX, setFromX] = useState("50");
-  const [toY, setToY] = useState("80");
+  const [fromX, setFromX] = useShareableState("from", "50");
+  const [toY, setToY] = useShareableState("to", "80");
 
-  const [partP, setPartP] = useState("30");
-  const [wholeW, setWholeW] = useState("120");
+  const [partP, setPartP] = useShareableState("part", "30");
+  const [wholeW, setWholeW] = useShareableState("whole", "120");
 
   const basic = useMemo(
     () => (toNumber(percentA) / 100) * toNumber(ofB),
@@ -39,9 +41,18 @@ export function PercentageCalculator() {
     return (p / w) * 100;
   }, [partP, wholeW]);
 
+  const shareParams = useMemo(
+    () => ({ pct: percentA, of: ofB, from: fromX, to: toY, part: partP, whole: wholeW }),
+    [percentA, ofB, fromX, toY, partP, wholeW]
+  );
+
   return (
     <CalculatorPageFrame domain={domain} maxWidth="max-w-3xl">
       <CalculatorHeader domain={domain} calculator={calculator} />
+
+      <div className="mb-5 flex justify-end">
+        <ShareButton params={shareParams} theme={domain.theme} />
+      </div>
 
       <div className="space-y-5">
         <div className="card-surface rounded-3xl p-6 shadow-sm">

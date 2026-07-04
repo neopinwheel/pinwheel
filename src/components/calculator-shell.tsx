@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import type { DomainMeta, CalculatorMeta } from "@/lib/calculators";
+import { ShareButton } from "@/components/ui/share-button";
 
 export function CalculatorHeader({
   domain,
@@ -73,11 +74,13 @@ export function CalculatorShell({
   calculator,
   inputs,
   results,
+  shareParams,
 }: {
   domain: DomainMeta;
   calculator: CalculatorMeta;
   inputs: React.ReactNode;
   results: React.ReactNode;
+  shareParams?: Record<string, string>;
 }) {
   return (
     <CalculatorPageFrame domain={domain}>
@@ -89,6 +92,11 @@ export function CalculatorShell({
         </div>
         <div className="lg:col-span-2">
           <div className="card-surface sticky top-24 rounded-3xl p-6 shadow-sm">
+            {shareParams && (
+              <div className="mb-4 flex justify-end">
+                <ShareButton params={shareParams} theme={domain.theme} />
+              </div>
+            )}
             {results}
           </div>
         </div>

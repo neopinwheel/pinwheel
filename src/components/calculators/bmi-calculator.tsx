@@ -1,12 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { getDomain } from "@/lib/calculators";
 import { CalculatorShell } from "@/components/calculator-shell";
 import { Field, Segmented } from "@/components/ui/field";
 import { ResultHero, StatRow } from "@/components/ui/result-stat";
 import { formatNumber, toNumber } from "@/lib/format";
 import { kgToLb } from "@/lib/units";
+import { useShareableState } from "@/hooks/use-shareable-state";
 
 const domain = getDomain("health")!;
 const calculator = domain.calculators.find((c) => c.slug === "bmi")!;
@@ -21,12 +22,12 @@ function categorize(bmi: number) {
 }
 
 export function BmiCalculator() {
-  const [units, setUnits] = useState<Units>("metric");
-  const [heightCm, setHeightCm] = useState("175");
-  const [weightKg, setWeightKg] = useState("72");
-  const [heightFt, setHeightFt] = useState("5");
-  const [heightIn, setHeightIn] = useState("9");
-  const [weightLb, setWeightLb] = useState("159");
+  const [units, setUnits] = useShareableState<Units>("units", "metric");
+  const [heightCm, setHeightCm] = useShareableState("hcm", "175");
+  const [weightKg, setWeightKg] = useShareableState("wkg", "72");
+  const [heightFt, setHeightFt] = useShareableState("hft", "5");
+  const [heightIn, setHeightIn] = useShareableState("hin", "9");
+  const [weightLb, setWeightLb] = useShareableState("wlb", "159");
 
   const result = useMemo(() => {
     let hMeters: number;
@@ -55,10 +56,16 @@ export function BmiCalculator() {
       ? `${formatNumber(result.minHealthy, 1)}–${formatNumber(result.maxHealthy, 1)} kg`
       : `${formatNumber(kgToLb(result.minHealthy), 0)}–${formatNumber(kgToLb(result.maxHealthy), 0)} lb`;
 
+  const shareParams = useMemo(
+    () => ({ units, hcm: heightCm, wkg: weightKg, hft: heightFt, hin: heightIn, wlb: weightLb }),
+    [units, heightCm, weightKg, heightFt, heightIn, weightLb]
+  );
+
   return (
     <CalculatorShell
       domain={domain}
       calculator={calculator}
+      shareParams={shareParams}
       inputs={
         <div className="space-y-5">
           <Segmented

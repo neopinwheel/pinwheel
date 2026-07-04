@@ -16,9 +16,10 @@ export function DateDiffCalculator() {
   const [endDate, setEndDate] = useState("");
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- default dates are client-only to avoid SSR/build-time date mismatch
-    setStartDate(todayInputValue());
-    setEndDate(addDaysInputValue(30));
+    const params = new URLSearchParams(window.location.search);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- default/shared dates are client-only to avoid SSR/build-time date mismatch
+    setStartDate(params.get("start") || todayInputValue());
+    setEndDate(params.get("end") || addDaysInputValue(30));
   }, []);
 
   const result = useMemo(() => {
@@ -33,10 +34,16 @@ export function DateDiffCalculator() {
     return { years, months, days, totalDays, totalWeeks, isReversed };
   }, [startDate, endDate]);
 
+  const shareParams = useMemo(
+    () => ({ start: startDate, end: endDate }),
+    [startDate, endDate]
+  );
+
   return (
     <CalculatorShell
       domain={domain}
       calculator={calculator}
+      shareParams={shareParams}
       inputs={
         <div className="space-y-5">
           <Field

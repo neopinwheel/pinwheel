@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { getDomain } from "@/lib/calculators";
 import { CalculatorShell } from "@/components/calculator-shell";
 import { Field, Segmented } from "@/components/ui/field";
 import { ResultHero, StatRow } from "@/components/ui/result-stat";
 import { formatCurrency, toNumber } from "@/lib/format";
+import { useShareableState } from "@/hooks/use-shareable-state";
 
 const domain = getDomain("finance")!;
 const calculator = domain.calculators.find((c) => c.slug === "compound-interest")!;
@@ -13,11 +14,11 @@ const calculator = domain.calculators.find((c) => c.slug === "compound-interest"
 type Frequency = "annually" | "monthly" | "daily";
 
 export function CompoundInterestCalculator() {
-  const [principal, setPrincipal] = useState("10000");
-  const [contribution, setContribution] = useState("250");
-  const [rate, setRate] = useState("7");
-  const [years, setYears] = useState("20");
-  const [frequency, setFrequency] = useState<Frequency>("monthly");
+  const [principal, setPrincipal] = useShareableState("principal", "10000");
+  const [contribution, setContribution] = useShareableState("contribution", "250");
+  const [rate, setRate] = useShareableState("rate", "7");
+  const [years, setYears] = useShareableState("years", "20");
+  const [frequency, setFrequency] = useShareableState<Frequency>("freq", "monthly");
 
   const result = useMemo(() => {
     const P = toNumber(principal);
@@ -47,10 +48,16 @@ export function CompoundInterestCalculator() {
     };
   }, [principal, contribution, rate, years, frequency]);
 
+  const shareParams = useMemo(
+    () => ({ principal, contribution, rate, years, freq: frequency }),
+    [principal, contribution, rate, years, frequency]
+  );
+
   return (
     <CalculatorShell
       domain={domain}
       calculator={calculator}
+      shareParams={shareParams}
       inputs={
         <div className="space-y-5">
           <Field

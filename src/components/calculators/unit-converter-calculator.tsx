@@ -1,12 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { ArrowLeftRight } from "lucide-react";
 import { getDomain } from "@/lib/calculators";
 import { CalculatorPageFrame, CalculatorHeader } from "@/components/calculator-shell";
 import { Field, Segmented, Select } from "@/components/ui/field";
 import { ResultHero } from "@/components/ui/result-stat";
+import { ShareButton } from "@/components/ui/share-button";
 import { formatNumber, toNumber } from "@/lib/format";
+import { useShareableState } from "@/hooks/use-shareable-state";
 
 const domain = getDomain("math")!;
 const calculator = domain.calculators.find((c) => c.slug === "unit-converter")!;
@@ -52,78 +54,108 @@ function fromCelsius(value: number, unit: keyof typeof TEMP_UNITS) {
 }
 
 export function UnitConverterCalculator() {
-  const [category, setCategory] = useState<Category>("length");
-  const [value, setValue] = useState("100");
+  const [category, setCategory] = useShareableState<Category>("category", "length");
+  const [value, setValue] = useShareableState("value", "100");
 
-  const [lengthFrom, setLengthFrom] = useState<keyof typeof LENGTH_UNITS>("km");
-  const [lengthTo, setLengthTo] = useState<keyof typeof LENGTH_UNITS>("mi");
+  const [lengthFrom, setLengthFrom] = useShareableState<keyof typeof LENGTH_UNITS>("lenFrom", "km");
+  const [lengthTo, setLengthTo] = useShareableState<keyof typeof LENGTH_UNITS>("lenTo", "mi");
 
-  const [weightFrom, setWeightFrom] = useState<keyof typeof WEIGHT_UNITS>("kg");
-  const [weightTo, setWeightTo] = useState<keyof typeof WEIGHT_UNITS>("lb");
+  const [weightFrom, setWeightFrom] = useShareableState<keyof typeof WEIGHT_UNITS>("wtFrom", "kg");
+  const [weightTo, setWeightTo] = useShareableState<keyof typeof WEIGHT_UNITS>("wtTo", "lb");
 
-  const [tempFrom, setTempFrom] = useState<keyof typeof TEMP_UNITS>("c");
-  const [tempTo, setTempTo] = useState<keyof typeof TEMP_UNITS>("f");
+  const [tempFrom, setTempFrom] = useShareableState<keyof typeof TEMP_UNITS>("tFrom", "c");
+  const [tempTo, setTempTo] = useShareableState<keyof typeof TEMP_UNITS>("tTo", "f");
+
+  // Values above may originate from a shared URL, so validate against known keys before use.
+  const safeLengthFrom = (lengthFrom in LENGTH_UNITS ? lengthFrom : "km") as keyof typeof LENGTH_UNITS;
+  const safeLengthTo = (lengthTo in LENGTH_UNITS ? lengthTo : "mi") as keyof typeof LENGTH_UNITS;
+  const safeWeightFrom = (weightFrom in WEIGHT_UNITS ? weightFrom : "kg") as keyof typeof WEIGHT_UNITS;
+  const safeWeightTo = (weightTo in WEIGHT_UNITS ? weightTo : "lb") as keyof typeof WEIGHT_UNITS;
+  const safeTempFrom = (tempFrom in TEMP_UNITS ? tempFrom : "c") as keyof typeof TEMP_UNITS;
+  const safeTempTo = (tempTo in TEMP_UNITS ? tempTo : "f") as keyof typeof TEMP_UNITS;
+  const safeCategory: Category =
+    category === "length" || category === "weight" || category === "temperature"
+      ? category
+      : "length";
 
   const result = useMemo(() => {
     const v = toNumber(value);
-    if (category === "length") {
-      const base = v * LENGTH_UNITS[lengthFrom].toBase;
-      return base / LENGTH_UNITS[lengthTo].toBase;
+    if (safeCategory === "length") {
+      const base = v * LENGTH_UNITS[safeLengthFrom].toBase;
+      return base / LENGTH_UNITS[safeLengthTo].toBase;
     }
-    if (category === "weight") {
-      const base = v * WEIGHT_UNITS[weightFrom].toBase;
-      return base / WEIGHT_UNITS[weightTo].toBase;
+    if (safeCategory === "weight") {
+      const base = v * WEIGHT_UNITS[safeWeightFrom].toBase;
+      return base / WEIGHT_UNITS[safeWeightTo].toBase;
     }
-    return fromCelsius(toCelsius(v, tempFrom), tempTo);
-  }, [category, value, lengthFrom, lengthTo, weightFrom, weightTo, tempFrom, tempTo]);
+    return fromCelsius(toCelsius(v, safeTempFrom), safeTempTo);
+  }, [safeCategory, value, safeLengthFrom, safeLengthTo, safeWeightFrom, safeWeightTo, safeTempFrom, safeTempTo]);
 
   const swap = () => {
-    if (category === "length") {
-      setLengthFrom(lengthTo);
-      setLengthTo(lengthFrom);
-    } else if (category === "weight") {
-      setWeightFrom(weightTo);
-      setWeightTo(weightFrom);
+    if (safeCategory === "length") {
+      setLengthFrom(safeLengthTo);
+      setLengthTo(safeLengthFrom);
+    } else if (safeCategory === "weight") {
+      setWeightFrom(safeWeightTo);
+      setWeightTo(safeWeightFrom);
     } else {
-      setTempFrom(tempTo);
-      setTempTo(tempFrom);
+      setTempFrom(safeTempTo);
+      setTempTo(safeTempFrom);
     }
   };
 
   const unitOptions =
-    category === "length"
+    safeCategory === "length"
       ? LENGTH_UNITS
-      : category === "weight"
+      : safeCategory === "weight"
         ? WEIGHT_UNITS
         : TEMP_UNITS;
 
-  const fromValue = category === "length" ? lengthFrom : category === "weight" ? weightFrom : tempFrom;
-  const toValue = category === "length" ? lengthTo : category === "weight" ? weightTo : tempTo;
+  const fromValue = safeCategory === "length" ? safeLengthFrom : safeCategory === "weight" ? safeWeightFrom : safeTempFrom;
+  const toValue = safeCategory === "length" ? safeLengthTo : safeCategory === "weight" ? safeWeightTo : safeTempTo;
   const setFrom =
-    category === "length"
+    safeCategory === "length"
       ? (v: string) => setLengthFrom(v as keyof typeof LENGTH_UNITS)
-      : category === "weight"
+      : safeCategory === "weight"
         ? (v: string) => setWeightFrom(v as keyof typeof WEIGHT_UNITS)
         : (v: string) => setTempFrom(v as keyof typeof TEMP_UNITS);
   const setTo =
-    category === "length"
+    safeCategory === "length"
       ? (v: string) => setLengthTo(v as keyof typeof LENGTH_UNITS)
-      : category === "weight"
+      : safeCategory === "weight"
         ? (v: string) => setWeightTo(v as keyof typeof WEIGHT_UNITS)
         : (v: string) => setTempTo(v as keyof typeof TEMP_UNITS);
 
   const unitLabel = (key: string) =>
     (unitOptions as Record<string, { label: string }>)[key].label;
 
+  const shareParams = useMemo(
+    () => ({
+      category: safeCategory,
+      value,
+      lenFrom: safeLengthFrom,
+      lenTo: safeLengthTo,
+      wtFrom: safeWeightFrom,
+      wtTo: safeWeightTo,
+      tFrom: safeTempFrom,
+      tTo: safeTempTo,
+    }),
+    [safeCategory, value, safeLengthFrom, safeLengthTo, safeWeightFrom, safeWeightTo, safeTempFrom, safeTempTo]
+  );
+
   return (
     <CalculatorPageFrame domain={domain} maxWidth="max-w-2xl">
       <CalculatorHeader domain={domain} calculator={calculator} />
+
+      <div className="mb-5 flex justify-end">
+        <ShareButton params={shareParams} theme={domain.theme} />
+      </div>
 
       <div className="card-surface rounded-3xl p-6 shadow-sm">
         <div className="mb-6">
           <Segmented
             theme={domain.theme}
-            value={category}
+            value={safeCategory}
             onChange={(v) => setCategory(v as Category)}
             options={[
               { label: "Length", value: "length" },

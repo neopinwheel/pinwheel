@@ -16,6 +16,8 @@ CREATE TABLE IF NOT EXISTS roadmap_phases (
   title TEXT NOT NULL,
   timeframe TEXT,
   summary TEXT,
+  status TEXT NOT NULL DEFAULT 'pending'
+    CHECK (status IN ('pending', 'in_progress', 'completed', 'blocked')),
   sort_order INTEGER NOT NULL,
   UNIQUE (version_id, phase_number)
 );
