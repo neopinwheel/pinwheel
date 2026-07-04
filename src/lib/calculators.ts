@@ -212,7 +212,7 @@ export const domains: DomainMeta[] = [
         description: "A full-featured calculator with trig, logs, powers, and memory.",
         icon: CalculatorIcon,
         explainer:
-          "Trig functions (sin, cos, tan) use whichever angle mode — DEG or RAD — is selected above the display. Results are rounded to 12 significant digits to avoid floating-point artifacts like 0.1 + 0.2 showing extra trailing digits.",
+          "Standard mode: trig functions use whichever angle mode — DEG or RAD — is selected, and results round to 12 significant digits to avoid floating-point artifacts. RPN mode uses a stack — enter a number and press Enter to push it, then operators pop the top two values. Programmer mode works in 32-bit integers, since JavaScript's bitwise operators (AND, OR, XOR, shifts) are 32-bit by definition.",
       },
       {
         slug: "percentage",
